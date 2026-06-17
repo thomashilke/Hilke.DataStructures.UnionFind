@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Hilke.DataStructures.UnionFind/Hilke.DataStructures.UnionFind.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Hilke.DataStructures.UnionFind.Tests/Hilke.DataStructures.UnionFind.Tests.csproj" />
+  </Folder>
+</Solution>
