@@ -9,11 +9,11 @@ public sealed class UnionFind<TElement> where TElement : notnull
 
     /// <summary>Initialize a collection of singleton sets.</summary>
     /// <param name="elements">The collection of elements that are used for the singletons.</param>
-    public UnionFind(IEnumerable<TElement> elements) =>
-        _nodes = elements.ToDictionary(element => element, element => new Node(element));
+    public UnionFind(IEnumerable<TElement> elements, IEqualityComparer<TElement> comparer = null) =>
+        _nodes = elements.ToDictionary(element => element, element => new Node(element), comparer ?? EqualityComparer<TElement>.Default);
 
     /// <summary>Initializes a collection of zero disjoint set.</summary>
-    public UnionFind() => _nodes = new Dictionary<TElement, Node>();
+    public UnionFind(IEqualityComparer<TElement> comparer = null) => _nodes = new Dictionary<TElement, Node>(comparer ?? EqualityComparer<TElement>.Default);
 
     /// <summary>Gets the representant elements of all the disjoint sets.</summary>
     /// <returns>A collection where each element is a representant of one of the disjoint set.</returns>
