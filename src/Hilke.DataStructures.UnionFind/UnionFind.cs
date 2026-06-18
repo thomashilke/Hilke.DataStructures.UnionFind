@@ -9,11 +9,11 @@ public sealed class UnionFind<TElement> where TElement : notnull
 
     /// <summary>Initialize a collection of singleton sets.</summary>
     /// <param name="elements">The collection of elements that are used for the singletons.</param>
-    public UnionFind(IEnumerable<TElement> elements, IEqualityComparer<TElement> comparer = null) =>
+    public UnionFind(IEnumerable<TElement> elements, IEqualityComparer<TElement>? comparer = null) =>
         _nodes = elements.ToDictionary(element => element, element => new Node(element), comparer ?? EqualityComparer<TElement>.Default);
 
     /// <summary>Initializes a collection of zero disjoint set.</summary>
-    public UnionFind(IEqualityComparer<TElement> comparer = null) => _nodes = new Dictionary<TElement, Node>(comparer ?? EqualityComparer<TElement>.Default);
+    public UnionFind(IEqualityComparer<TElement>? comparer = null) => _nodes = new Dictionary<TElement, Node>(comparer ?? EqualityComparer<TElement>.Default);
 
     /// <summary>Gets the representant elements of all the disjoint sets.</summary>
     /// <returns>A collection where each element is a representant of one of the disjoint set.</returns>
@@ -36,11 +36,12 @@ public sealed class UnionFind<TElement> where TElement : notnull
     /// <summary>Merges the two disjoint sets to whom <paramref name="element1" /> and <paramref name="element2"> belong.</summary>
     /// <param name="element1">An element of the first disjoint set.</param>
     /// <param name="element2">An element of the second disjoint set.</param>
+    /// <returns>The representant of the new merged disjoint set.</returns>
     /// <remarks>
     ///   When <paramref name="element1" /> and <paramref name="element2" /> belong to the same disjoint
     ///   set, <c>Union</c> has no effect. In other word, <c>Union</c> is idempotent.
     /// </remarks>
-    public void Union(TElement element1, TElement element2)
+    public TElement Union(TElement element1, TElement element2)
     {
         var node1 = FindNode(element1);
         var node2 = FindNode(element2);
@@ -50,17 +51,22 @@ public sealed class UnionFind<TElement> where TElement : notnull
             if (node1.Rank < node2.Rank)
             {
                 node1.Parent = node2;
+                return node2.Element;
             }
             else if (node2.Rank < node1.Rank)
             {
                 node2.Parent = node1;
+                return node1.Element;
             }
             else
             {
                 node2.Parent = node1;
                 node1.Rank += 1;
+                return node1.Element;
             }
         }
+
+        return node1.Element;
     }
 
     private Node FindNode(TElement element)
